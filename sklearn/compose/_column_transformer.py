@@ -1540,6 +1540,17 @@ class make_column_selector:
         A selection of dtypes to exclude. For more details, see
         :meth:`pandas.DataFrame.select_dtypes`.
 
+    cardinality : {'low', 'high'}, default=None
+        Filter columns by cardinality (number of distinct values). If `'low'`,
+        select columns whose number of unique (non-missing) values is less than
+        or equal to `cardinality_threshold`. If `'high'`, select columns whose
+        number of unique (non-missing) values is greater than
+        `cardinality_threshold`.
+
+    cardinality_threshold : int, default=7
+        Threshold separating low- from high-cardinality columns. Only evaluated after
+        applying `dtype_include`/`dtype_exclude` and `pattern`.
+
     Returns
     -------
     selector : callable
