@@ -1612,7 +1612,7 @@ class make_column_selector:
             else:  
                 cols = [c for c in cols if df[c].nunique() > self.cardinality_threshold]
 
-        return cols.tolist()
+        return cols
     
        
 
