@@ -498,7 +498,8 @@ Apart from a scalar or a single item list, the column selection can be specified
 as a list of multiple items, an integer array, a slice, a boolean mask, or
 with a :func:`~sklearn.compose.make_column_selector`. The
 :func:`~sklearn.compose.make_column_selector` is used to select columns based
-on data type or column name::
+on data type, column name or cardinality (number of distinct values). 
+When multiple criteria are provided, all criteria must match for a column to be selected::
 
   >>> from sklearn.preprocessing import StandardScaler
   >>> from sklearn.compose import make_column_selector
@@ -507,7 +508,8 @@ on data type or column name::
   ...       make_column_selector(dtype_include=np.number)),
   ...       ('onehot',
   ...       OneHotEncoder(),
-  ...       make_column_selector(pattern='city', dtype_include=object))])
+  ...       make_column_selector(pattern='city', dtype_include=object, 
+  ...                             cardinality='low', cardinality_threshold=10))])
   >>> ct.fit_transform(X)
   array([[ 0.904,  0.      ,  1. ,  0. ,  0. ],
          [-1.507,  1.414,  1. ,  0. ,  0. ],
