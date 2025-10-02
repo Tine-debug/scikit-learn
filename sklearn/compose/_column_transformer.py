@@ -1573,10 +1573,13 @@ class make_column_selector:
            [ 0.90453403,  0.        ,  0.        ,  1.        ]])
     """
 
-    def __init__(self, pattern=None, *, dtype_include=None, dtype_exclude=None):
+    def __init__(self, pattern=None, *, dtype_include=None, dtype_exclude=None, cardinality=None,
+        cardinality_threshold=7,):
         self.pattern = pattern
         self.dtype_include = dtype_include
         self.dtype_exclude = dtype_exclude
+        self.cardinality = cardinality
+        self.cardinality_threshold = cardinality_threshold
 
     def __call__(self, df):
         """Callable for column selection to be used by a
@@ -1599,7 +1602,19 @@ class make_column_selector:
         cols = df_row.columns
         if self.pattern is not None:
             cols = cols[cols.str.contains(self.pattern, regex=True)]
+
+        if self.cardinality is not None:
+            if self.cardinality not in ("low", "high"):
+                raise ValueError("cardinality must be 'low', 'high', or None")
+
+            if self.cardinality == "low":
+                cols = [c for c in cols if df[c].nunique() <= self.cardinality_threshold]
+            else:  
+                cols = [c for c in cols if df[c].nunique() > self.cardinality_threshold]
+
         return cols.tolist()
+    
+       
 
 
 def _feature_names_out_with_str_format(
