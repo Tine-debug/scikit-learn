@@ -1471,6 +1471,48 @@ def test_make_column_selector_pickle():
     assert_array_equal(selector(X_df), selector_picked(X_df))
 
 
+def test_make_column_selector_cardinality_low_high():
+    # Testing the cadinality attrbibute on its on
+    pd = pytest.importorskip("pandas")
+    X_df = pd.DataFrame({
+        "city": ["London", "London", "Paris", "Berlin", "Berlin"],  
+        "country": ["UK", "UK", "FR", "DE", "DE"],
+        "street": ["street1", "street2", "street3", "street4", "street5"],               
+        "id": [1, 2, 3, 4, 4],                                
+    })
+
+    selector_low = make_column_selector(cardinality="low", cardinality_threshold=3)
+    cols_low = selector_low(X_df)
+    assert set(cols_low) == {"city", "country"}
+
+    selector_high = make_column_selector(cardinality="high", cardinality_threshold=3)
+    cols_high = selector_high(X_df)
+    assert cols_high == ["street", "id"]
+
+
+def test_make_column_selector_cardinality_with_pattern():
+    # Testing cardinality in combination with pattern attribute
+    pd = pytest.importorskip("pandas")
+    X_df = pd.DataFrame({
+        "cat_low": ["a", "a", "b", "b"],   
+        "cat_high": ["x", "y", "z", "w"],  
+        "num": [1, 2, 3, 4]
+    })
+
+    selector = make_column_selector(pattern="cat", cardinality="low", cardinality_threshold=2)
+    cols = selector(X_df)
+    assert cols == ["cat_low"]
+
+
+def test_make_column_selector_invalid_cardinality():
+    pd = pytest.importorskip("pandas")
+    X_df = pd.DataFrame({"x": [1, 2, 3]})
+    selector = make_column_selector(cardinality="medium")  # invalid
+    with pytest.raises(ValueError, match="cardinality must be 'low', 'high', or None"):
+        selector(X_df)
+
+
+
 @pytest.mark.parametrize(
     "empty_col",
     [[], np.array([], dtype=int), lambda x: []],
