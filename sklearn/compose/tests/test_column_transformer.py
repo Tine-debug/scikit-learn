@@ -1475,10 +1475,10 @@ def test_make_column_selector_cardinality_low_high():
     # Testing the cadinality attrbibute on its on
     pd = pytest.importorskip("pandas")
     X_df = pd.DataFrame({
-        "city": ["London", "London", "Paris", "Berlin"],  
-        "country": ["UK", "UK", "FR", "DE"],
+        "city": ["London", "London", "Paris", "Berlin", "Berlin"],  
+        "country": ["UK", "UK", "FR", "DE", "DE"],
         "street": ["street1", "street2", "street3", "street4", "street5"],               
-        "id": [1, 2, 3, 4],                                
+        "id": [1, 2, 3, 4, 4],                                
     })
 
     selector_low = make_column_selector(cardinality="low", cardinality_threshold=3)
@@ -1487,7 +1487,7 @@ def test_make_column_selector_cardinality_low_high():
 
     selector_high = make_column_selector(cardinality="high", cardinality_threshold=3)
     cols_high = selector_high(X_df)
-    assert cols_high == ["id", "street"]
+    assert cols_high == ["street", "id"]
 
 
 def test_make_column_selector_cardinality_with_pattern():
