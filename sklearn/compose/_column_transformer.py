@@ -1619,11 +1619,12 @@ class make_column_selector:
                 raise ValueError("cardinality must be 'low', 'high', or None")
 
             if self.cardinality == "low":
-                cols = [c for c in cols if df[c].nunique() <= self.cardinality_threshold]
-            else:  
-                cols = [c for c in cols if df[c].nunique() > self.cardinality_threshold]
+                cols = df.loc[:, [c for c in cols if df[c].nunique() <= self.cardinality_threshold]].columns
+            else:
+                cols = df.loc[:, [c for c in cols if df[c].nunique() > self.cardinality_threshold]].columns
 
-        return cols
+
+        return cols.tolist()
     
        
 
