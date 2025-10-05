@@ -1518,7 +1518,7 @@ class make_column_selector:
     :class:`ColumnTransformer`.
 
     :func:`make_column_selector` can select columns based on datatype or the
-    columns name with a regex. When using multiple selection criteria, **all**
+    columns name with a regex or cardinality. When using multiple selection criteria, **all**
     criteria must match for a column to be selected.
 
     For an example of how to use :func:`make_column_selector` within a
